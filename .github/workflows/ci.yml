@@ -1,0 +1,83 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test-backend:
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: aremos_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: aremos-backend/package-lock.json
+    
+    - name: Install backend dependencies
+      working-directory: ./aremos-backend
+      run: npm ci
+    
+    - name: Generate Prisma client
+      working-directory: ./aremos-backend
+      run: npm run generate
+      env:
+        DATABASE_URL: postgresql://postgres:test@localhost:5432/aremos_test
+    
+    - name: Run database migrations
+      working-directory: ./aremos-backend
+      run: npm run migrate:deploy
+      env:
+        DATABASE_URL: postgresql://postgres:test@localhost:5432/aremos_test
+    
+    - name: Build backend
+      working-directory: ./aremos-backend
+      run: npm run build
+
+  test-frontend:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: aremos-frontend/package-lock.json
+    
+    - name: Install frontend dependencies
+      working-directory: ./aremos-frontend
+      run: npm ci
+    
+    - name: Lint frontend
+      working-directory: ./aremos-frontend
+      run: npm run lint
+    
+    - name: Build frontend
+      working-directory: ./aremos-frontend
+      run: npm run build
+      env:
+        NEXT_PUBLIC_API_BASE: http://localhost:3000
+        NEXT_PUBLIC_TOKEN_KEY: aremos_token
