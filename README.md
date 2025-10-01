@@ -277,48 +277,4 @@ npm run lint         # Run ESLint
 
 All rights reserved. This project is proprietary and not intended for public use.
 
-## 🤝 Contributing
 
-Contributions are currently limited to authorized developers only. If you want to contribute:
-
-### Development Setup
-1. Follow the installation guide above
-2. Make sure all tests pass: `npm test` (backend), `npm run lint` (frontend)
-3. Use the existing code style and patterns
-
-### Current Focus Areas
-- **Backend**: All controllers and API endpoints are implemented
-- **Frontend**: All pages and components are connected to real APIs
-- **Security**: JWT (2h), bcrypt, rate limiting, and input validation are active
-- **Algorithm**: AREMOS learning algorithm is fully implemented
-- **Features**: Classrooms, insights, notifications, and spaced repetition are functional
-
-### Architecture Decisions
-- **Backend**: Fastify + Prisma + PostgreSQL (hosted on Railway)
-- **Frontend**: Next.js App Router + TailwindCSS (hosted on Vercel)
-- **Storage**: Supabase for card images (JPG/PNG/WebP, max 10MB)
-- **Auth**: JWT with token versioning and JTI blacklisting
-- **Timezone**: Europe/Berlin for all date calculations
-
-### Code Standards
-- TypeScript strict mode for all files
-- Prisma for all database operations (no raw SQL)
-- Zod for input validation on all API endpoints
-- TailwindCSS for all styling (no inline styles)
-- Neutral error messages with field indicators for frontend
-
-### Testing
-Currently, the project focuses on manual testing and TypeScript compilation checks. Automated tests are planned for future releases.
-
-### Deployment
-- **Backend**: Automatic deployment via Railway on push to main
-- **Frontend**: Automatic deployment via Vercel on push to main
-- **Database**: PostgreSQL with Prisma migrations
-
-## 📞 Support
-
-For questions or issues, please create an issue in this repository.
-
----
-
-**AREMOS** - Modern Learning with Digital Flashcards 🎓
